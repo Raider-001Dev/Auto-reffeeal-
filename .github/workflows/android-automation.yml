@@ -10,28 +10,41 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      # Step 2: Install Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      # Step 3: Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t android-emulator .
+
+      # Step 4: Setup Python
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: '3.8'
 
+      # Step 5: Install dependencies
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
 
-      # Download BB Cloud Phone APK from Google Drive link
+      # Step 6: Download BB Cloud Phone APK from Google Drive link
       - name: Download BB Cloud Phone APK
         run: |
           curl -L -o BB_Cloud_Phone.apk "https://drive.google.com/uc?id=11YyaD6DmaOMPD1aYZPpdFWQuSPGj5dIZ"
 
-      # Install TempMail APK from GitHub repository
+      # Step 7: Install TempMail APK from GitHub repository
       - name: Download TempMail APK
         run: |
           curl -L -o TempMail.apk "https://github.com/Raider-001Dev/Auto-reffeeal-/raw/main/TempMail.apk"
 
+      # Step 8: Run automation script
       - name: Run automation script
         run: |
           python automation_script.py

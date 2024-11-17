@@ -1,0 +1,41 @@
+name: Android Emulator Automation with UI Element Detection
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker image for Android Emulator
+        run: |
+          docker build -t android-emulator .
+
+      - name: Run Android Emulator container
+        run: |
+          docker run -d -p 4723:4723 android-emulator
+
+      - name: Install Python dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Install Appium server dependencies
+        run: |
+          npm install -g appium
+
+      - name: Start Appium server
+        run: |
+          appium &
+
+      - name: Run automation script
+        run: |
+          python automation_script.py

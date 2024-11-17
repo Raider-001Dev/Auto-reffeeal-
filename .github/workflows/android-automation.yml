@@ -1,4 +1,4 @@
-name: Android Emulator Automation with UI Element Detection
+name: Automation Script Workflow
 
 on:
   push:
@@ -6,35 +6,31 @@ on:
       - main
 
 jobs:
-  build:
+  automation-job:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
 
-      - name: Build Docker image for Android Emulator
-        run: |
-          docker build -t android-emulator .
-
-      - name: Run Android Emulator container
-        run: |
-          docker run -d -p 4723:4723 android-emulator
-
-      - name: Install Python dependencies
+      - name: Install dependencies
         run: |
           pip install -r requirements.txt
 
-      - name: Install Appium server dependencies
+      # Download BB Cloud Phone APK from Google Drive link
+      - name: Download BB Cloud Phone APK
         run: |
-          npm install -g appium
+          curl -L -o BB_Cloud_Phone.apk "https://drive.google.com/uc?id=11YyaD6DmaOMPD1aYZPpdFWQuSPGj5dIZ"
 
-      - name: Start Appium server
+      # Install TempMail APK from GitHub repository
+      - name: Download TempMail APK
         run: |
-          appium &
+          curl -L -o TempMail.apk "https://github.com/Raider-001Dev/Auto-reffeeal-/raw/main/TempMail.apk"
 
       - name: Run automation script
         run: |
